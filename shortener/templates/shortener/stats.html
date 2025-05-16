@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shortened URL Statistics</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px 8px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #007bff; color: #fff; }
+        tr:hover { background: #f1f7ff; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .short-link { color: #007bff; text-decoration: none; }
+        .short-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shortened URL Statistics</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Short Code</th>
+                    <th>Short URL</th>
+                    <th>Original URL</th>
+                    <th>Created At</th>
+                    <th>Click Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for url in urls %}
+                <tr>
+                    <td>{{ url.short_code }}</td>
+                    <td><a class="short-link" href="{% url 'shortener:redirect' url.short_code %}" target="_blank">{{ request.build_absolute_uri|slice:":-6" }}{{ url.short_code }}/</a></td>
+                    <td style="word-break: break-all;">{{ url.original_url }}</td>
+                    <td>{{ url.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ url.click_count }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align:center;">No URLs have been shortened yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a class="back-link" href="{% url 'shortener:home' %}">&larr; Back to Shortener</a>
+    </div>
+</body>
+</html> 
